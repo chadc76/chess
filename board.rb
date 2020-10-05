@@ -1,8 +1,18 @@
 require_relative "piece"
 class Board
-  attr_reader :grid
+  attr_reader :rows
   def initialize
-      @grid = set_board
+      @rows = set_board
+  end
+
+  def [](pos)
+    row, col = pos
+    @rows[row][col]
+  end
+
+  def []=(pos, piece)
+    row, col = pos
+    @rows[row][col] = piece
   end
 
   def set_board
@@ -18,13 +28,11 @@ class Board
   end
 
   def move_piece(start_pos, end_pos)
-    r1,c1 = start_pos
-    r2,c2 = end_pos
-    raise "There is no piece at #{start_pos}" if grid[r1][c1] == nil
-    piece = grid[r1][c1]
-    raise "You cannot move #{piece} to #{end_pos}" if grid[r2][c2] != nil
-    grid[r1][c1] = nil
-    grid[r2][c2] = piece
-    grid
+    raise "There is no piece at #{start_pos}" if self[start_pos] == nil
+    piece = self[start_pos]
+    raise "You cannot move #{piece} to #{end_pos}" if self[end_pos] != nil
+    self[start_pos] = nil
+    self[end_pos] = piece
+    rows
   end
 end
