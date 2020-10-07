@@ -5,7 +5,7 @@ module Stepable
       cur_x, cur_y = pos
       cur_x, cur_y = cur_x + dx, cur_y + dy
       pos = [cur_x, cur_y]
-      next unless board.valid_pos?(pos)
+      next unless board.val_pos?(pos)
       if board[pos].empty?
         moves << pos
       elsif board[pos].color != self.color

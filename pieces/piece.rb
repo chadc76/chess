@@ -1,8 +1,12 @@
+require 'colorize'
+
 class Piece
-  attr_reader :board, :color
+  attr_reader :board, :color, :moves
   attr_accessor :pos
   def initialize(color, board, pos)
     @color, @board, @pos = color, board, pos
+
+    board.add_piece(self, pos)
   end
 
   def to_s
@@ -14,7 +18,7 @@ class Piece
   end
 
   def valid_moves
-
+    moves
   end
 
   def symbol 

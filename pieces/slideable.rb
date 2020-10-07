@@ -41,7 +41,7 @@ module Slideable
     loop do
       cur_x, cur_y = cur_x + dx, cur_y + dy
       new_pos = [cur_x, cur_y]
-      break unless board.valid_pos?(new_pos)
+      break unless board.val_pos?(new_pos)
 
       if board[new_pos].empty?
         moves << new_pos

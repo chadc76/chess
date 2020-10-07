@@ -3,22 +3,22 @@ require_relative 'piece'
 class Pawn < Piece
 
   def symbol
-    :p.colorize(color)
+    "p".colorize(color)
   end
 
-  def move_dirs
+  def moves
     forward_steps + side_attacks
   end
 
   private
-  
+
   def at_start_row?
-    row = color = :white ? 6 : 1
+    row = color == :white ? 6 : 1
     pos[0] == row ? true : false
   end
 
   def forward_dir
-    num = color = :white ? -1 : 1
+    num = color == :white ? -1 : 1
     num
   end
 
@@ -35,12 +35,15 @@ class Pawn < Piece
 
   def side_attacks
     r, c = pos
-    sides = [ [r + forward_dir, j - 1], [r + forward_dir, j + 1]]
+    sides = [ [r + forward_dir, c - 1], [r + forward_dir, c + 1]]
     sides.select do |side|
-      return false unless board.val_pos?(side)
-      return false if board.empty?(side) 
-      victim = board[side]
-      victim && victim.color != color
+      if board.val_pos?(side) && !board.empty?(side) 
+        victim = board[side]
+        victim && victim.color != color
+      else
+        false
+      end
     end
+    sides 
   end
 end

@@ -5,12 +5,12 @@ class Queen < Piece
   include Slideable
 
   def symbol
-    :Q.colorize(color)
+    "Q".colorize(color)
   end
 
   protected
   
   def move_dir
-    horizontal_and_verrtical_dirs + diagonal_dirs
+    horizontal_and_vertical_dirs + diagonal_dirs
   end
 end
