@@ -25,8 +25,10 @@ class Board
     piece = self[start_pos]
     if piece.color != turn_color
       raise 'You must move your own piece'
-    elsif !piece.valid_moves.include?(end_pos)
+    elsif !piece.moves.include?(end_pos)
       raise 'Piece does not move like that'
+    elsif !piece.valid_moves.include?(end_pos)
+      raise 'You cannot move into check'
     end
     move_piece!(start_pos, end_pos)
   end
@@ -42,20 +44,17 @@ class Board
   end
 
   def checkmate?(color)
-    checkmate = pieces.select{|piece| piece.color == color}
-      .all? do |piece|
+    return false unless in_check?(color)
+
+    pieces.select{|p| p.color == color}.all? do |piece|
       piece.valid_moves.empty?
     end
-    puts "Checkmate" if checkmate
-    checkmate
   end
 
   def in_check?(color)
     king_pos = find_king(color)
     opposing_color = color == :white ? :black : :white
-    check = check?(opposing_color, king_pos)
-    puts "Check!" if check
-    check
+    check?(opposing_color, king_pos)
   end
 
   def find_king(color)
