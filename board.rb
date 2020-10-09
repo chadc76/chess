@@ -1,5 +1,4 @@
 require_relative "pieces"
-require 'colorize'
 class Board
   attr_reader :rows
   def initialize(fill_board = true)
