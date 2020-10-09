@@ -16,6 +16,9 @@ class Board
     @rows[row][col] = piece
   end
 
+  def empty?(pos)
+    self[pos].empty?
+  end
   
   def move_piece(turn_color, start_pos, end_pos)
     raise "There is no piece at #{start_pos}" if empty?(start_pos)
@@ -29,15 +32,6 @@ class Board
     render
   end
 
-  def move_piece!(start_pos, end_pos)
-    piece = self[start_pos]
-    raise 'Piece does not move like that' unless piece.moves.include?(end_pos)
-    self[start_pos] = sentinel
-    self[end_pos] = piece
-    piece.pos = end_pos
-    rows
-  end
-  
   def valid_pos?(pos)
     r, c = pos
     r.between?(0,7) && c.between?(0,7)
@@ -47,10 +41,13 @@ class Board
     raise 'position not empty' unless empty?(pos)
     self[pos] = piece
   end
-  
 
-  def empty?(pos)
-    self[pos].empty?
+  def checkmate?(color)
+    checkmate = pieces.select(&:color).all? do |piece|
+      piece.valid_moves.empty?
+    end
+    puts "Checkmate" if checkmate
+    checkmate
   end
 
   def in_check?(color)
@@ -70,6 +67,16 @@ class Board
   def pieces
     @rows.flatten.reject(&:empty?)
   end
+
+  def move_piece!(start_pos, end_pos)
+    piece = self[start_pos]
+    raise 'Piece does not move like that' unless piece.moves.include?(end_pos)
+    self[start_pos] = sentinel
+    self[end_pos] = piece
+    piece.pos = end_pos
+    rows
+  end
+
   private
 
   attr_reader :sentinel
