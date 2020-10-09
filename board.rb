@@ -68,6 +68,15 @@ class Board
     @rows.flatten.reject(&:empty?)
   end
 
+  def dup
+    new_board = Board.new(false)
+
+    pieces.each do |piece|
+      piece.class.new(piece.color, new_board, piece.pos)
+    end
+    new_board
+  end
+
   def move_piece!(start_pos, end_pos)
     piece = self[start_pos]
     raise 'Piece does not move like that' unless piece.moves.include?(end_pos)
