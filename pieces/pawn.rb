@@ -10,7 +10,7 @@ class Pawn < Piece
     forward_steps + side_attacks
   end
 
-  private
+  # private
 
   def at_start_row?
     row = color == :white ? 6 : 1
@@ -36,14 +36,11 @@ class Pawn < Piece
   def side_attacks
     r, c = pos
     sides = [ [r + forward_dir, c - 1], [r + forward_dir, c + 1]]
-    sides.select do |side|
-      if board.valid_pos?(side) && !board.empty?(side) 
-        victim = board[side]
-        victim && victim.color != color
-      else
-        false
-      end
+    moves = []
+    sides.each do |side|
+      threatened_piece = board[side]
+      moves << side if board.valid_pos?(side) && !board.empty?(side) && threatened_piece.color != color
     end
-    sides 
+    moves
   end
 end
