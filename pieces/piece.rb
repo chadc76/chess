@@ -1,5 +1,3 @@
-require 'colorize'
-
 class Piece
   attr_reader :board, :color, :moves
   attr_accessor :pos
