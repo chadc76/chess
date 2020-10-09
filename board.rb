@@ -38,19 +38,6 @@ class Board
     piece.pos = end_pos
     rows
   end
-
-  def render
-    copy = rows.dup
-    new_rows = copy.map do |row|
-      row.map do |piece|
-        piece.symbol
-      end
-    end
-    new_rows.each.with_index do |row, i|
-      puts "#{i} #{row.join(" ")}".colorize(:background=>:blue)
-    end
-    nil
-  end
   
   def valid_pos?(pos)
     r, c = pos
