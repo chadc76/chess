@@ -20,6 +20,18 @@ class Display
     end
   end
 
+  def reset!
+    @notifications.delete(:error)
+  end
+
+  def uncheck!
+    @notifications.delete(:check)
+  end
+
+  def set_check!
+    @notifications[:check] = "Check!"
+  end
+
   private
 
   def build_grid
@@ -46,17 +58,5 @@ class Display
       bg = :light_yellow
     end
     { background: bg }
-  end
-
-  def reset!
-    @notifications.delete(:error)
-  end
-
-  def uncheck!
-    @notifications.delete(:check)
-  end
-
-  def set_check!
-    @notifications[:check] = "Check!"
   end
 end
