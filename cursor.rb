@@ -77,14 +77,17 @@ class Cursor
   end
 
   def handle_key(key)
-    if key == :return || key == :space
+    case key
+    when :ctrl_c
+      exit 0
+    when :return, :space
       toggle_selected
-      return cursor_pos
-    elsif MOVES.keys.include?(key)
+      cursor_pos
+    when :left, :right, :up, :down
       update_pos(MOVES[key])
-      return nil
-    elsif :ctrl_c
-      Process.exit(0)
+      nil
+    else
+      puts key
     end
   end
 
