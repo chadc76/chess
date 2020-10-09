@@ -1,16 +1,16 @@
 module Slideable
   HORIZONTAL_AND_VERTICAL_DIRS = [
-      [-1,0],
-      [0,1],
-      [0,-1],
-      [1,0]
+    [-1, 0],
+    [0, -1],
+    [0, 1],
+    [1, 0]
   ].freeze
 
   DIAGONAL_DIRS = [
-      [-1,-1],
-      [1,-1],
-      [-1,1],
-      [1,1]
+    [-1, -1],
+    [-1, 1],
+    [1, -1],
+    [1, 1]
   ].freeze
 
   def horizontal_and_vertical_dirs
@@ -45,9 +45,8 @@ module Slideable
 
       if board[new_pos].empty?
         moves << new_pos
-      elsif board[new_pos].color != self.color
-        moves << new_pos
       else
+        moves << new_pos if board[new_pos].color != color
         break
       end
     end
