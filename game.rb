@@ -6,7 +6,7 @@ require_relative 'computer'
 
 class Game
   attr_reader :board, :display, :players, :current_player
-  def initialize(players)
+  def initialize(players = [false, true])
     @board = Board.new
     @display = Display.new(@board)
     @players = {}
