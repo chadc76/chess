@@ -10,7 +10,7 @@ class Pawn < Piece
     forward_steps + side_attacks
   end
 
-  # private
+  private
 
   def at_start_row?
     row = color == :white ? 6 : 1
