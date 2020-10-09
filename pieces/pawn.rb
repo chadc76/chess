@@ -25,7 +25,7 @@ class Pawn < Piece
   def forward_steps
     r, c = pos
     one_step = [r + forward_dir, c]
-    return [] unless board.val_pos?(one_step) && board.empty?(one_step)
+    return [] unless board.valid_pos?(one_step) && board.empty?(one_step)
     moves = [one_step]
 
     two_step = [r + 2 * forward_dir, c]
@@ -37,7 +37,7 @@ class Pawn < Piece
     r, c = pos
     sides = [ [r + forward_dir, c - 1], [r + forward_dir, c + 1]]
     sides.select do |side|
-      if board.val_pos?(side) && !board.empty?(side) 
+      if board.valid_pos?(side) && !board.empty?(side) 
         victim = board[side]
         victim && victim.color != color
       else
