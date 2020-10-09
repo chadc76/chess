@@ -3,17 +3,21 @@ require_relative 'cursor'
 require_relative 'board'
 
 class Display
-  attr_reader :board, :cursor
+  attr_reader :board, :cursor, :notifications
   def initialize(board)
     @board = board
     @cursor = Cursor.new([0,0], board)
+    @notifications = {}
   end
 
   def render
     system("clear")
     puts "Arrow keys, WASD, or vim to move, space or enter to confirm."
     build_grid.each { |row| puts row.join}
-    nil
+    
+    @notifications.each do |_key, val|
+      puts val
+    end
   end
 
   def build_grid
@@ -42,11 +46,15 @@ class Display
     { background: bg }
   end
 
-  def make_move
-    turn_over = false
-    until turn_over
-      render
-      cursor.get_input
-    end
+  def reset!
+    @notifications.delete(:error)
+  end
+
+  def uncheck!
+    @notifications.delete(:check)
+  end
+
+  def set_check!
+    @notifications[:check] = "Check!"
   end
 end
