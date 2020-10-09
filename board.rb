@@ -52,7 +52,7 @@ class Board
     nil
   end
   
-  def val_pos?(pos)
+  def valid_pos?(pos)
     r, c = pos
     r.between?(0,7) && c.between?(0,7)
   end
