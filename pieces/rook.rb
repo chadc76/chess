@@ -5,7 +5,7 @@ class Rook < Piece
   include Slideable
 
   def symbol
-    "R".colorize(color)
+    '♜'.colorize(color)
   end
 
   protected

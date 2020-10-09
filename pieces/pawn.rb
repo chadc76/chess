@@ -3,7 +3,7 @@ require_relative 'piece'
 class Pawn < Piece
 
   def symbol
-    "p".colorize(color)
+    '♟'.colorize(color)
   end
 
   def moves
