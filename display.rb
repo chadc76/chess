@@ -20,6 +20,8 @@ class Display
     end
   end
 
+  private
+
   def build_grid
     @board.rows.map.with_index do |row, i|
       build_row(row, i)

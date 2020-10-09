@@ -1,17 +1,4 @@
 module Slideable
-  HORIZONTAL_AND_VERTICAL_DIRS = [
-    [-1, 0],
-    [0, -1],
-    [0, 1],
-    [1, 0]
-  ].freeze
-
-  DIAGONAL_DIRS = [
-    [-1, -1],
-    [-1, 1],
-    [1, -1],
-    [1, 1]
-  ].freeze
 
   def horizontal_and_vertical_dirs
     HORIZONTAL_AND_VERTICAL_DIRS
@@ -30,6 +17,20 @@ module Slideable
   end
 
   private
+
+  HORIZONTAL_AND_VERTICAL_DIRS = [
+    [-1, 0],
+    [0, -1],
+    [0, 1],
+    [1, 0]
+  ].freeze
+
+  DIAGONAL_DIRS = [
+    [-1, -1],
+    [-1, 1],
+    [1, -1],
+    [1, 1]
+  ].freeze
 
   def move_dir
     raise NotImplementedError

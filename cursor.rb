@@ -51,6 +51,21 @@ class Cursor
 
   private
 
+  def handle_key(key)
+    case key
+    when :ctrl_c
+      exit 0
+    when :return, :space
+      toggle_selected
+      cursor_pos
+    when :left, :right, :up, :down
+      update_pos(MOVES[key])
+      nil
+    else
+      puts key
+    end
+  end
+
   def read_char
     STDIN.echo = false # stops the console from printing return values
 
@@ -78,21 +93,6 @@ class Cursor
     STDIN.cooked! # the opposite of raw mode :)
 
     return input
-  end
-
-  def handle_key(key)
-    case key
-    when :ctrl_c
-      exit 0
-    when :return, :space
-      toggle_selected
-      cursor_pos
-    when :left, :right, :up, :down
-      update_pos(MOVES[key])
-      nil
-    else
-      puts key
-    end
   end
 
   def update_pos(diff)
