@@ -52,6 +52,24 @@ class Board
   def empty?(pos)
     self[pos].empty?
   end
+
+  def in_check?(color)
+    king_pos = find_king(color)
+    opposing_color = color == :white ? :black : :white
+    check = check?(opposing_color, king_pos)
+    puts "Check!" if check
+    check
+  end
+
+  def find_king(color)
+    pieces.each do |piece|
+      return piece.pos if piece.is_a?(King) && piece.color == color
+    end
+  end
+
+  def pieces
+    @rows.flatten.reject(&:empty?)
+  end
   private
 
   attr_reader :sentinel
@@ -79,5 +97,12 @@ class Board
   def fill_pawns_row(color)
     r = color == :white ? 6 : 1
     8.times {|c| piece = Pawn.new(color, self, [r, c]) }
+  end
+
+  def check?(opposing_color, king_pos)
+    self.pieces.each do |piece|
+      return true if piece.color == opposing_color && piece.moves.include?(king_pos)
+    end
+    false
   end
 end
