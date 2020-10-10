@@ -85,10 +85,9 @@ class Board
     rows
   end
 
-  def draw?
-    black = pieces.select{|p| p.color == :black}
-    white = pieces.select{|p| p.color == :white}
-    no_moves(black) || no_moves(white) || only_king_and_pawns
+  def draw?(color)
+    current_color = pieces.select{|p| p.color == color}
+    no_moves(current_color) || only_king_and_pawns
   end
 
   private
