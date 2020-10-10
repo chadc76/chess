@@ -85,6 +85,12 @@ class Board
     rows
   end
 
+  def draw?
+    black = pieces.select{|p| p.color == :black}
+    white = pieces.select{|p| p.color == :white}
+    no_moves(black) || no_moves(white) || only_king_and_pawns
+  end
+
   private
 
   attr_reader :sentinel
@@ -119,5 +125,17 @@ class Board
       return true if piece.color == opposing_color && piece.moves.include?(king_pos)
     end
     false
+  end
+
+  def no_moves(pieces)
+    moves = []
+    pieces.each{|piece| moves += piece.valid_moves}
+    moves.empty?
+  end
+
+  def only_king_and_pawns
+    return false if !pieces.all?{|p| p.class == King || p.class == Pawn}
+    return false if pieces.count >= 4 && pieces.map(&:valid_moves).reject(&:empty?).count >= 4
+    true
   end
 end
