@@ -4,10 +4,16 @@ class ComputerPlayer < Player
 
   def make_move(_board)
     display.render
-    if piece_threatened?(_board)
+    if checkmate_possible(_board)
+      move = checkmate_possible(_board)
+    elsif piece_threatened?(_board)
       move = piece_threatened?(_board)    
     elsif capture_piece(_board)
       move = capture_piece(_board)
+    elsif safe_check(_board)
+      move = safe_check(_board)
+    elsif check_possible(_board) && in_endgame?(_board)
+      move = check_possible(_board)
     else
       move = random_move(_board)
     end
@@ -30,7 +36,6 @@ class ComputerPlayer < Player
   end
 
   def capture_piece(_board)
-    opponent_color = color == :white ? :black : :white
     threatening_moves = []
     pieces(_board).each do |piece|
       piece.valid_moves.each do |end_pos|
@@ -48,9 +53,8 @@ class ComputerPlayer < Player
 
   def random_move(_board)
     piece = pieces(_board).sample
-    stat_pos = piece.pos 
-    end_pos = piece.valid_moves.sample
-    [stat_pos, end_pos]
+    start_pos = piece.pos
+    return [start_pos, piece.valid_moves.sample]
   end
 
   def calculate_move(piece1, piece2, _board)
@@ -75,7 +79,6 @@ class ComputerPlayer < Player
 
   def piece_threatened?(_board)
     strong_pieces = _board.pieces.select{|p| p.color == color && p.class != Pawn}
-    opponent_color = color == :white ? :black : :white
     copy = _board.dup
     opponents = opponent_moves(opponent_color, copy)
     threatened = threatened_pieces(strong_pieces, opponents)
@@ -90,6 +93,7 @@ class ComputerPlayer < Player
     pieces.each do |piece|
       threatened_pieces << piece if opponents.include?(piece.pos)
     end
+    
     threatened_pieces
   end
 
@@ -103,6 +107,60 @@ class ComputerPlayer < Player
         start_pos = piece.pos
       end
     end
-    [start_pos, _board[start_pos].valid_moves.sample]
+    move = safe_move(_board[start_pos], _board)
+    move
+  end
+
+  def safe_move(piece, _board)
+    piece.valid_moves.each do |end_pos|
+      copy = _board.dup
+      copy.move_piece!(piece.pos, end_pos)
+      return [piece.pos, end_pos] if opponent_moves(opponent_color, copy).none?{|move| move == end_pos}
+    end
+    return [] #if piece.class == King
+    # return _board.pieces.reject{|p| p.valid_moves.empty?}.sample.valid_moves.sample if piece.class == King
+    piece.valid_moves.sample
+  end
+
+  def safe_check(_board)
+    pieces(_board).each do |piece|
+      piece.valid_moves.each do |end_pos|
+      copy = _board.dup
+      copy.move_piece!(piece.pos, end_pos)
+      return [piece.pos, end_pos] if copy.in_check?(opponent_color) && opponent_moves(opponent_color, copy).none?{|move| move == end_pos}
+      end
+    end
+    false
+  end
+
+  def opponent_color
+    opponent_color = color == :white ? :black : :white
+  end
+
+  def checkmate_possible(_board)
+    pieces(_board).each do |piece|
+      piece.valid_moves.each do |move|
+      copy = _board.dup
+      copy.move_piece!(piece.pos, move)
+      return [piece.pos, move] if copy.checkmate?(opponent_color)
+      end
+    end
+    false
+  end
+
+  def check_possible(_board)
+    pieces(_board).each do |piece|
+      piece.valid_moves.each do |end_pos|
+      copy = _board.dup
+      copy.move_piece!(piece.pos, end_pos)
+      return [piece.pos, end_pos] if copy.in_check?(opponent_color)
+      end
+    end
+    false
+  end
+
+  def in_endgame?(_board)
+    strong_pieces = _board.pieces.select{|p| p.color == opponent_color && p.class != Pawn}
+    strong_pieces.none?{|p| p.class == Queen} && strong_pieces.count <= 4
   end
 end
