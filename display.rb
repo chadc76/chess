@@ -6,7 +6,7 @@ class Display
   attr_reader :board, :cursor, :notifications
   def initialize(board)
     @board = board
-    @cursor = Cursor.new([0,0], board)
+    @cursor = Cursor.new([7,4], board)
     @notifications = {}
   end
 
@@ -49,13 +49,13 @@ class Display
 
   def color_options(i, j)
     if cursor.cursor_pos == [i,j] && cursor.selected
-      bg = :light_green
+      bg = :green
     elsif cursor.cursor_pos == [i,j]
       bg = :red
     elsif (i + j).odd?
-      bg = :light_blue
+      bg = :blue
     else
-      bg = :light_yellow
+      bg = :light_blue
     end
     { background: bg }
   end
