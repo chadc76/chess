@@ -10,7 +10,7 @@ class ComputerPlayer < Player
       move = piece_threatened?(_board)    
     elsif capture_piece(_board)
       move = capture_piece(_board)
-    elsif safe_check(_board)
+    elsif safe_check(_board) && in_endgame?(_board)
       move = safe_check(_board)
     elsif check_possible(_board) && in_endgame?(_board)
       move = check_possible(_board)
@@ -52,9 +52,8 @@ class ComputerPlayer < Player
   end
 
   def random_move(_board)
-    piece = pieces(_board).sample
-    start_pos = piece.pos
-    return [start_pos, piece.valid_moves.sample]
+    piece = pieces(_board).reject{|p| p.valid_moves.empty?}.sample
+    [piece.pos, piece.valid_moves.sample]
   end
 
   def calculate_move(piece1, piece2, _board)
@@ -117,9 +116,7 @@ class ComputerPlayer < Player
       copy.move_piece!(piece.pos, end_pos)
       return [piece.pos, end_pos] if opponent_moves(opponent_color, copy).none?{|move| move == end_pos}
     end
-    return [] #if piece.class == King
-    # return _board.pieces.reject{|p| p.valid_moves.empty?}.sample.valid_moves.sample if piece.class == King
-    piece.valid_moves.sample
+    return []
   end
 
   def safe_check(_board)
