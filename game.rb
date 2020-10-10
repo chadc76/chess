@@ -19,7 +19,7 @@ class Game
   end
 
   def play
-    until board.checkmate?(current_player)
+    until board.checkmate?(current_player) || board.draw?
       begin
       start_pos, end_pos = players[current_player].make_move(board)
       board.move_piece(current_player, start_pos, end_pos)
@@ -32,7 +32,8 @@ class Game
     end
 
     display.render
-    puts "#{current_player} is checkmated."
+    puts "#{current_player} is checkmated." if board.checkmate?(current_player)
+    puts "Draw!" if board.draw? && !board.checkmate?(current_player)
     nil
   end
 
