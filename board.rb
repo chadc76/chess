@@ -90,6 +90,11 @@ class Board
     no_moves(current_color) || only_king_and_pawns
   end
 
+  def upgrade(piece)
+    self[piece.pos] = @sentinel
+    Queen.new(piece.color, self, piece.pos)
+  end
+
   private
 
   attr_reader :sentinel
