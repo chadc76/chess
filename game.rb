@@ -23,6 +23,7 @@ class Game
       begin
       start_pos, end_pos = players[current_player].make_move(board)
       board.move_piece(current_player, start_pos, end_pos)
+      board.upgrade(board[end_pos]) if board[end_pos].class == Pawn && board[end_pos].upgrade?(current_player)
       swap_turn!
       notify_players
       rescue StandardError => e
@@ -50,4 +51,8 @@ class Game
   def swap_turn!
     @current_player = current_player == :white ? :black : :white
   end
+end
+
+if __FILE__ == $PROGRAM_NAME
+  Game.new.play
 end
