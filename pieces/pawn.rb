@@ -10,6 +10,11 @@ class Pawn < Piece
     forward_steps + side_attacks
   end
 
+  def upgrade?(color) 
+    target = color == :white ? 0 : 7
+    pos[0] == target 
+  end
+
   private
 
   def at_start_row?
@@ -37,10 +42,12 @@ class Pawn < Piece
     r, c = pos
     sides = [ [r + forward_dir, c - 1], [r + forward_dir, c + 1]]
     moves = []
-    sides.each do |side|
-      threatened_piece = board[side]
-      moves << side if board.valid_pos?(side) && !board.empty?(side) && threatened_piece.color != color
+    sides.select do |new_pos|
+      next false unless board.valid_pos?(new_pos)
+      next false if board.empty?(new_pos)
+
+      threatened_piece = board[new_pos]
+      threatened_piece && threatened_piece.color != color
     end
-    moves
   end
 end
