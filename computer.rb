@@ -86,9 +86,25 @@ class ComputerPlayer < Player
     opponents = opponent_moves(copy)
     threatened = threatened_pieces(strong_pieces, opponents)
     return false if threatened.empty?
+    move = capture_attacker(threatened, _board)
+    return move if !move.empty?
     move = value_moves(threatened, _board)
     return false if move.empty?
     move
+  end
+
+  def capture_attacker(threatened, _board)
+    end_pos = worst_threat(threatened)
+    attacker = []
+    opponents = _board.pieces.reject{|p| p.color == color}
+    opponents.each do |opp_piece|
+      attacker = opp_piece.pos if opp_piece.valid_moves.include?(end_pos)
+    end
+
+    pieces(_board).each do |piece|
+      return [piece.pos, attacker] if piece.valid_moves.include?(attacker)
+    end
+    []
   end
 
   def threatened_pieces(pieces, opponents)
@@ -101,6 +117,12 @@ class ComputerPlayer < Player
   end
 
   def value_moves(threatened_pieces, _board)
+    start_pos = worst_threat(threatened_pieces)
+    move = safe_moves(_board[start_pos], _board)
+    move
+  end
+
+  def worst_threat(threatened_pieces)
     start_pos = []
     value = 0
     threatened_pieces.each do |piece|
@@ -110,8 +132,7 @@ class ComputerPlayer < Player
         start_pos = piece.pos
       end
     end
-    move = safe_moves(_board[start_pos], _board)
-    move
+    start_pos
   end
 
   def safe_moves(piece, _board)
