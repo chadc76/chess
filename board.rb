@@ -87,7 +87,7 @@ class Board
 
   def draw?(color)
     current_color = pieces.select{|p| p.color == color}
-    no_moves(current_color) || only_king_and_pawns
+    no_moves(current_color) || only_king
   end
 
   def upgrade(piece)
@@ -137,8 +137,8 @@ class Board
     moves.empty?
   end
 
-  def only_king_and_pawns
-    return false if !pieces.all?{|p| p.class == King || p.class == Pawn}
+  def only_king
+    return false if !pieces.all?{|p| p.class == King }
     return false if pieces.count >= 4 && pieces.map(&:valid_moves).reject(&:empty?).count >= 4
     true
   end
