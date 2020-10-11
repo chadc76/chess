@@ -4,24 +4,21 @@ class ComputerPlayer < Player
 
   def make_move(_board)
     display.render
-    if checkmate_possible(_board)
-      move = checkmate_possible(_board)
-    elsif piece_threatened?(_board)
-      move = piece_threatened?(_board)    
-    elsif capture_piece(_board)
-      move = capture_piece(_board)
-    elsif can_upgrade?(_board)
-      move = can_upgrade?(_board)
-    elsif safe_check(_board) && in_endgame?(_board)
-      move = safe_check(_board)
-    elsif check_possible(_board) && in_endgame?(_board)
-      move = check_possible(_board)
-    elsif move_toward_upgrade?(_board) && (_board.pieces.select{|p| p.color == color && p.class != Pawn}).count < 4
-      move = move_toward_upgrade?(_board)
-    else
-      move = random_move(_board)
-    end
-    move
+    move = checkmate_possible(_board)
+    return move if move
+    move = piece_threatened?(_board)  
+    return move if move
+    move = capture_piece(_board)
+    return move if move
+    move = can_upgrade?(_board)
+    return move if move
+    move = safe_check(_board)
+    return move if move && in_endgame?(_board)
+    move = check_possible(_board)
+    return move if move && in_endgame?(_board)
+    move = move_toward_upgrade?(_board)
+    return move if (move && (_board.pieces.select{|p| p.color == color && p.class != Pawn}).count < 4)
+    random_move(_board)
   end
 
   private
@@ -74,9 +71,7 @@ class ComputerPlayer < Player
   def opponent_moves(_board)
     opponent_pieces = _board.pieces.select{|p| p.color == opponent_color}
     opponent_moves = []
-    opponent_pieces.each do |piece|
-      opponent_moves += piece.valid_moves
-    end
+    opponent_pieces.each{|piece| opponent_moves += piece.valid_moves}
     opponent_moves
   end
 
@@ -97,22 +92,14 @@ class ComputerPlayer < Player
     end_pos = worst_threat(threatened)
     attacker = []
     opponents = _board.pieces.reject{|p| p.color == color}
-    opponents.each do |opp_piece|
-      attacker = opp_piece.pos if opp_piece.valid_moves.include?(end_pos)
-    end
-
-    pieces(_board).each do |piece|
-      return [piece.pos, attacker] if piece.valid_moves.include?(attacker)
-    end
+    opponents.each{|opp_piece| attacker = opp_piece.pos if opp_piece.valid_moves.include?(end_pos)}
+    pieces(_board).each{|piece| return [piece.pos, attacker] if piece.valid_moves.include?(attacker) }
     []
   end
 
   def threatened_pieces(pieces, opponents)
     threatened_pieces = []
-    pieces.each do |piece|
-      threatened_pieces << piece if opponents.include?(piece.pos)
-    end
-    
+    pieces.each{|piece| threatened_pieces << piece if opponents.include?(piece.pos) }
     threatened_pieces
   end
 
@@ -141,7 +128,7 @@ class ComputerPlayer < Player
       copy.move_piece!(piece.pos, end_pos)
       return [piece.pos, end_pos] if opponent_moves(copy).none?{|move| move == end_pos}
     end
-    return []
+    []
   end
 
   def safe_check(_board)
@@ -216,9 +203,7 @@ class ComputerPlayer < Player
     target = color == :white ? 0 : 7
     pawns = pawns(_board)
     pawns.each do |pawn|
-      pawn.valid_moves.each do |end_pos|
-        return [pawn.pos, end_pos] if end_pos[0] == target && safe_move(pawn, end_pos, _board)
-      end
+      pawn.valid_moves.each{|end_pos| return [pawn.pos, end_pos] if end_pos[0] == target && safe_move(pawn, end_pos, _board) }
     end
     false
   end
